@@ -15,55 +15,36 @@ import nodemailer from "nodemailer";
     waitUntil: "domcontentloaded",
   });
 
-  //------------------USER NUMBER------------------------//
-  await page.waitForSelector('[name="userNumber"]', { visible: true });
-  await page.click('[name="userNumber"]');
-  await page.type('[name="userNumber"]', "9289080335", { delay: 200 });
+  const loginPage = async () => {
+    await page.waitForSelector('[name="userNumber"]', { visible: true });
+    await page.type('[name="userNumber"]', "9289080335", { delay: 200 });
 
-  //------------------USER PASSWORD------------------------//
-  await page.waitForSelector(".passwordInput__container-input>input", {
-    visible: true,
-  });
-  await page.click(".passwordInput__container-input>input");
-  await page.type(".passwordInput__container-input>input", "Lostone123", {
-    delay: 200,
-  });
+    await page.waitForSelector(".passwordInput__container-input>input", {
+      visible: true,
+    });
+    await page.type(".passwordInput__container-input>input", "Lostone123");
 
-  //------------------LOGIN BUTTON------------------------//
-  await page.waitForSelector("button.active", {
-    waitUntil: "domcontentloaded",
-  });
-  await page.click("button.active");
-  console.log("clicked");
+    const btnLogin = await page.$("button.active");
+    btnLogin.click();
+  };
+  loginPage();
 
-  const page1 = await browser.newPage();
+  const wingoSecPage = async () => {
+    await page.evaluate(() => {
+      const img1 = document.querySelector(
+        '.lobby .lottery .b>img[src="https://ossimg.91admin123admin.com/91club/lotterycategory/lotterycategory_202502101011154e3a.png"]'
+      );
 
-  await page1.goto("https://91appl.com/#/home/AllLotteryGames/WinGo?id=1",{
-    waitUntil: "networkidle0",
-  })
+      img1.click();
+    });
+  };
 
-
-
-  // Wait for the GameList to appear
-  await page1.waitForSelector(".GameList__C > .GameList__C-item", {
-    visible: true,
-  });
-
-  await page1.waitForSelector(".GameList__C > .GameList__C-item:nth-child(2)", {
-    visible: true,
-  });
-
-  // Click the second element in the list
-  await page1.click(".GameList__C > .GameList__C-item:nth-child(1)");
-
-  console.log("done");
+  setTimeout(() => {
+    wingoSecPage();
+  }, 15000);
 
 
-  await page.goto("https://91appl.com/#/home/AllLotteryGames/WinGo?id=1",{
-    waitUntil: "networkidle0",
-  })
-
-  // Function to fetch the third child text at intervals
+ //Function to fetch the third child text at intervals
   const fetchGameRecord = async () => {
     const getBS = await page.evaluate(() => {
       const row = document.querySelectorAll(
@@ -119,4 +100,5 @@ import nodemailer from "nodemailer";
   const intervalId = setInterval(async () => {
     await fetchGameRecord();
   }, 30000);
-})();
+})()
+
