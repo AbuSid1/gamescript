@@ -1,11 +1,13 @@
 import puppeteer from "puppeteer";
 import nodemailer from "nodemailer";
+import moment from "moment-timezone"
 
 (async () => {
   let arr1 = [];
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: "new",
+  args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"],
   });
 
   const page = await browser.newPage();
@@ -46,6 +48,7 @@ import nodemailer from "nodemailer";
 
  //Function to fetch the third child text at intervals
   const fetchGameRecord = async () => {
+    const timeShow = moment().tz("Asia/Kolkata").format("DD-MMM-YYYY hh:mm:ss A")
     const getBS = await page.evaluate(() => {
       const row = document.querySelectorAll(
         ".GameRecord__C-body > .van-row"
@@ -58,7 +61,7 @@ import nodemailer from "nodemailer";
 
     if (getBS) {
       arr1.push(getBS);
-      console.log(arr1);
+      console.log(`${timeShow} : ${arr1}`);
     }
 
     //Email Sent Function
